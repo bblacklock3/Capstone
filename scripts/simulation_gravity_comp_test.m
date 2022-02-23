@@ -137,6 +137,7 @@ link_1 = [r_O r_O_B];
 plot(link_1(1,:),link_1(2,:))
 link_2 = [r_O_B r_O_D];
 plot(link_2(1,:),link_2(2,:))
+
 plot(r_O_A(1,:),r_O_A(2,:),'b*')
 plot(r_O_C(1,:),r_O_C(2,:),'r*')
 end
