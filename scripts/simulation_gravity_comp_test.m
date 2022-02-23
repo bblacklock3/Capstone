@@ -54,6 +54,7 @@ m_1 = 2*mass_thigh;
 m_2 = 2*(mass_shank+mass_foot);
 I_1 = tvInertia_thigh_1;
 I_2 = tvInertia_shank_1;
+prop = [L_1 L_2 G_1 G_2 m_1 m_2 I_1 I_2];
 
 % Simple values
 % L_1 = 0.1;
@@ -64,7 +65,7 @@ I_2 = tvInertia_shank_1;
 % m_2 = 1/9.81;
 % I_1 = 0.001;
 % I_2 = 0.001;
-prop = [L_1 L_2 G_1 G_2 m_1 m_2 I_1 I_2];
+% prop = [L_1 L_2 G_1 G_2 m_1 m_2 I_1 I_2];
 
 %% 
 figure(1)
@@ -78,17 +79,17 @@ t_sol_arr = [];
 psi_sol_arr = [];
 tau_arr = [];
 
-gc_factor = 1;
+gc_factor = 0.8;
 t_sol = 0;
-psi_sol = [0 0 0 0];
+psi_sol = [pi/4 0 -pi/4 0];
 delta_t = 0.01;
-while t_sol < 5
+while t_sol < 1
     t1_start = tic();
     cla, hold on
-    plot_two_link(psi_sol(1),psi_sol(3),prop)
+    plot_two_link_coupled(psi_sol(1),psi_sol(3),prop)
     drawnow
-    [tau_1, tau_2] = gravity_comp(psi_sol(1),psi_sol(3), prop);
-    [t_sol,psi_sol] = ode45(@(t,psi) two_link_ode(t,psi,gc_factor*tau_1,gc_factor*tau_2,prop),[t_sol t_sol+delta_t],psi_sol,opts_1);
+    [tau_1, tau_2] = gravity_comp_coupled(psi_sol(1),psi_sol(3), prop);
+    [t_sol,psi_sol] = ode45(@(t,psi) two_link_coupled_ode(t,psi,gc_factor*tau_1,gc_factor*tau_2,prop),[t_sol t_sol+delta_t],psi_sol,opts_1);
     t_sol = t_sol(end);
     psi_sol = psi_sol(end,:);
     t1 = toc(t1_start);
@@ -122,7 +123,7 @@ xlabel('Time (s)')
 ylabel('Torque (Nm)')
 legend('Hip','Knee')
 
-function plot_two_link(psi_1,psi_2,prop)
+function plot_two_link_decoupled(psi_1,psi_2,prop)
 L_1 = prop(1);
 L_2 = prop(2);
 G_1 = prop(3);
@@ -132,6 +133,24 @@ r_O_A = G_1*[cos(psi_1); sin(psi_1);];
 r_O_B = L_1*[cos(psi_1); sin(psi_1);];
 r_O_C = [L_1*cos(psi_1)+G_2*cos(psi_2); L_1*sin(psi_1)+G_2*sin(psi_2);];
 r_O_D = [L_1*cos(psi_1)+L_2*cos(psi_2); L_1*sin(psi_1)+L_2*sin(psi_2);];
+link_1 = [r_O r_O_B];
+plot(link_1(1,:),link_1(2,:))
+link_2 = [r_O_B r_O_D];
+plot(link_2(1,:),link_2(2,:))
+plot(r_O_A(1,:),r_O_A(2,:),'b*')
+plot(r_O_C(1,:),r_O_C(2,:),'r*')
+end
+
+function plot_two_link_coupled(theta_1,theta_2,prop)
+L_1 = prop(1);
+L_2 = prop(2);
+G_1 = prop(3);
+G_2 = prop(4);
+r_O = [0; 0];
+r_O_A = G_1*[cos(theta_1); sin(theta_1);];
+r_O_B = L_1*[cos(theta_1); sin(theta_1);];
+r_O_C = [L_1*cos(theta_1)+G_2*cos(theta_1+theta_2); L_1*sin(theta_1)+G_2*sin(theta_1+theta_2);];
+r_O_D = [L_1*cos(theta_1)+L_2*cos(theta_1+theta_2); L_1*sin(theta_1)+L_2*sin(theta_1+theta_2);];
 link_1 = [r_O r_O_B];
 plot(link_1(1,:),link_1(2,:))
 link_2 = [r_O_B r_O_D];
