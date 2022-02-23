@@ -18,7 +18,7 @@ tau_2 = 0;
 opts_1 = odeset('RelTol',1e-3,'AbsTol',1e-4,'MaxStep',0.025);
 [t_sol,psi_sol] = ode45(@(t,psi) two_link_ode(t,psi,tau_1,tau_2,prop),tspan,psi_0,opts_1);
 %% 
-delta_t = 0.1;
+delta_t = 0.015;
 interp_index = 1;
 for i = 1:length(t_sol)
     if t_sol(i)-t_sol(interp_index(end)) > delta_t
@@ -34,10 +34,9 @@ for i = 1:length(interp_index)
     cla, hold on
     t1_start = tic();
     plot_two_link(psi_sol(interp_index(i),1),psi_sol(interp_index(i),3))
-    t2_start = tic();
     drawnow
-    pause(delta_t)
-    t1 = toc(t2_start);
+    t1 = toc(t1_start);
+    pause(delta_t-t1)
 end
 
 function plot_two_link(psi_1,psi_2)
