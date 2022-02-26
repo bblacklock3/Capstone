@@ -1,3 +1,4 @@
+% HI MAGGIE MADE AN EDIT CAN YOU SEE IT?
 %% Constants
 L_1 = 0.15;
 L_2 = 0.1;
