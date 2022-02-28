@@ -2,9 +2,9 @@ function EOM = calc_lagrange(L,q,Q)
 
 % Calculates the equations of motion with full time derivatives
 % L - Lagrange equation
-% q - Matrix of symbolic variables where each row represents a generalized
-% coordiate
-% Q - Virtual work terms
+% q - Variable matrix where each row contains a generalized coordinate
+% and each column is the ith derivative with respect to time
+% Q (optional) - Virtual work terms
 % Example:
 %
 % % Generalized coordinates
