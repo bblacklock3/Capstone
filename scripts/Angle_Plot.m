@@ -1,7 +1,7 @@
 % Angle Plot
 
 % Resetting MATLAB
-clear, clc, close;
+%clear, clc, close;
 
 % Obtaining data
 Data = xlsread('Angle_Data.xlsx');
@@ -21,6 +21,7 @@ Knee = Knee(~isnan(Knee));
 %Standardizing time
 T_min = min([T_Hip(1), T_Ankle(1), T_Knee(1)]);
 T_max = max([T_Hip(end), T_Ankle(end), T_Knee(end)]);
+
 T_Hip = [T_min; T_Hip; T_max];
 T_Hip = T_Hip - T_Hip(1);
 Hip = [Hip(1); Hip; Hip(end)];
@@ -35,6 +36,7 @@ Knee = [Knee(1); Knee; Knee(end)];
 
 % Creating poly fits (n = degree)
 n = 17;
+warning('off');
 p1 = polyfit(T_Hip, Hip, n);
 x1 = linspace(min(T_Hip), max(T_Hip));
 y1 = polyval(p1, x1);
@@ -46,8 +48,7 @@ y2 = polyval(p2, x2);
 p3 = polyfit(T_Knee, Knee, n);
 x3 = linspace(min(T_Knee), max(T_Knee));
 y3 = polyval(p3, x3);
-
-clc
+warning('on');
 
 % Plotting
 colors1 = {[0 0.4470 0.7410], [0.9290 0.6940 0.1250], [0.4660 0.6740 0.1880]};
