@@ -51,7 +51,7 @@ subplot(1,2,2);
 set(gcf, 'Position',  [500, 500, 1000, 400]);
 
 h1 = animatedline('MaximumNumPoints', 6);
-h1.LineWidth = 15;
+h1.LineWidth = 3;
 h_Knee = animatedline('MaximumNumPoints', 1);
 h_Knee.Marker = 'o';
 h_Knee.MarkerEdgeColor = colors{2};
