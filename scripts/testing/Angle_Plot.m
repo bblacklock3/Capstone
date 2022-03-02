@@ -1,7 +1,7 @@
 % Angle Plot
 
 % Resetting MATLAB
-%clear, clc, close;
+clear, clc, close;
 
 % Obtaining data
 Data = xlsread('Angle_Data.xlsx');
