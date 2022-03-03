@@ -1,9 +1,7 @@
-# Capstone
-2022 Spring GT Capstone
-
-source: code that's finalized/ fully developed
-kinematic_analysis: stuff used to analyze plots from research papers and outputs of video analyses from Kinovea
-simulation: dynamimcs, simulating kicks
-controller: controller...
-
-scripts: WIPs/ minor tasks
+# Infant Kicking Data
+## angle_data
+Contains joint angles from several papers on kicking kinematics
+## kinovea_data
+Contains joint angles from video data extracted with kinovea
+## optotrak_data
+Contains two example kicks from an infant study

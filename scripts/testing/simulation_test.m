@@ -1,22 +1,13 @@
 %% Constants
-L_1 = 0.15;
-L_2 = 0.1;
-G_1 = 0.08;
-G_2 = 0.06; 
-m_1 = 0.1;
-m_2 = 0.1;
-I_1 = 0.01;
-I_2 = 0.01;
-prop = [L_1 L_2 G_1 G_2 m_1 m_2 I_1 I_2];
+prop = load_prop('full_system');
 
 %%
 tspan = [0 5];
-psi_0 = [0 0 0 0];
-% psi_0 = [-pi/2 0 -pi/2 0];
-tau_1 = 0;
-tau_2 = 0;
+% psi_0 = [0 0 0 0];
+psi_0 = [-pi/2+0.2 0 -pi/2 0];
+tau = [0 0 0 0];
 opts_1 = odeset('RelTol',1e-3,'AbsTol',1e-4,'MaxStep',0.025);
-[t_sol,psi_sol] = ode45(@(t,psi) two_link_ode(t,psi,tau_1,tau_2,prop),tspan,psi_0,opts_1);
+[t_sol,psi_sol] = ode45(@(t,psi) full_system_ode(t,psi,tau,prop),tspan,psi_0,opts_1);
 %% 
 delta_t = 0.015;
 interp_index = 1;
