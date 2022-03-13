@@ -3,8 +3,14 @@
 % clear
 clc, close all
 
-X = linspace(0,100)';
-Y = linspace(0,1)';
+Data = readmatrix('an01#001.abc.csv');
+Time = [1:length(Data)]';
+Time = Time - Time(1);
+Time = Time ./ Time(end);
+Hip = Data(:,3);
+
+X = Time';
+Y = Hip';
 [p] = Polynomial_Gattherer(X, Y)
 
 function [p] = Polynomial_Gattherer(X, Y)
