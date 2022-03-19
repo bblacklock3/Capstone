@@ -35,15 +35,11 @@ com_shank = 0.4377*length_shank;    % estimation according to Schneider and Zern
 com_foot = 0.3469*length_foot;      %
 
 % estimates for moments of inertia
-% according to Schneider and Zernicke (1992)
-tvInertia_thigh_1 = 0.017943*length_thigh + 0.005699*circ_thigh - 0.0027078;
-tvInertia_shank_1 = 0.000018660*bodyMass + 0.0085431*length_shank + 0.0016127*circ_shank - 0.0011192;
-
-% estimates for moments of inertia
 % according to Sun and Jensen (1994)
 % units are kg m^2
-tvInertia_thigh_2 = -1.90e-04 + 4.35e-05*age_weeks;
-tvInertia_shank_2 =  8.74e-05 + 9.89e-06*age_weeks;
+lgInertia_thigh =  8.44e-05 + 1.43e-05*age_weeks
+lgInertia_shank =  5.45e-05 + 2.41e-06*age_weeks
+lgInertia_foot  =  8.07e-06 + 1.15e-06*age_weeks
 
 % Real values
 L_1 = length_thigh

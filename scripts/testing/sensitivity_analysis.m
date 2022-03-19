@@ -2,23 +2,23 @@
 prop = load_prop('full_system');
 
 syms g L_1 L_2
-syms L__i_g1 L__i_g2 m__i_1 m__i_2 I__i_1 I__i_2
+syms L__i_g_1 L__i_g_2 m__i_1 m__i_2 I__i_1 I__i_2
 syms psi_1 psi_dot_1 psi_ddot_1 psi_2 psi_dot_2 psi_ddot_2
-syms L__d_g1 L__d_g2 m__d_1 m__d_2 I__d_1 I__d_2 I__d_m1 n_1 I__d_m2 n_2
+syms L__d_g_1 L__d_g_2 m__d_1 m__d_2 I__d_1 I__d_2 I__d_m_1 n_1 I__d_m_2 n_2
 
 % State varialbes: u
 u_psi = [psi_1 psi_dot_1 psi_ddot_1 psi_2 psi_dot_2 psi_ddot_2];
-u_const = [g L_1 L_2 L__i_g1 L__i_g2 m__i_1 m__i_2 I__i_1 I__i_2];
-u_const_0 = [prop.g prop.L_1 prop.L_2 prop.L__i_g1 prop.L__i_g2 prop.m__i_1 prop.m__i_2 prop.I__i_1 prop.I__i_2];
+u_const = [g L_1 L_2 L__i_g_1 L__i_g_2 m__i_1 m__i_2 I__i_1 I__i_2];
+u_const_0 = [prop.g prop.L_1 prop.L_2 prop.L__i_g_1 prop.L__i_g_2 prop.m__i_1 prop.m__i_2 prop.I__i_1 prop.I__i_2];
 
 % Design variables: x
-x1 = [L__d_g1 L__d_g2 m__d_1 m__d_2 I__d_1 I__d_m1 n_1];
-x1_0 = [prop.L__d_g1 prop.L__d_g2 prop.m__d_1 prop.m__d_2 prop.I__d_1 prop.I__d_m1 prop.n_1];
-x1_names = {'L__d_g1' 'L__d_g2' 'm__d_1' 'm__d_2' 'I__d_1' 'I__d_m1' 'n_1'};
+x1 = [L__d_g_1 L__d_g_2 m__d_1 m__d_2 I__d_1 I__d_m_1 n_1];
+x1_0 = [prop.L__d_g_1 prop.L__d_g_2 prop.m__d_1 prop.m__d_2 prop.I__d_1 prop.I__d_m_1 prop.n_1];
+x1_names = {'L__d_g_1' 'L__d_g_2' 'm__d_1' 'm__d_2' 'I__d_1' 'I__d_m_1' 'n_1'};
 
-x2 = [L__d_g2 m__d_2 I__d_2 I__d_m2 n_2];
-x2_0 = [prop.L__d_g2 prop.m__d_2 prop.I__d_2 prop.I__d_m2 prop.n_2];
-x2_names = {'L__d_g2' 'm__d_2' 'I__d_2' 'I__d_m2' 'n_2'};
+x2 = [L__d_g_2 m__d_2 I__d_2 I__d_m_2 n_2];
+x2_0 = [prop.L__d_g_2 prop.m__d_2 prop.I__d_2 prop.I__d_m_2 prop.n_2];
+x2_names = {'L__d_g_2' 'm__d_2' 'I__d_2' 'I__d_m_2' 'n_2'};
 
 % Full dynamics
 full_eqn = full_system_eom;
