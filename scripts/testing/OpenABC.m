@@ -4,8 +4,8 @@
 clear, clc, close;
 
 % Obtaining data
-Angular_Data = xlsread('an01#001.abc.csv'); %Ankle, Knee, Joint
-Kinematic_Data = xlsread('LF01#001.ABC.csv'); %Foot, Ankle, Knee, Hip, and Trunk
+Angular_Data = xlsread('b1_left_an01#001.abc.csv'); %Ankle, Knee, Joint
+Kinematic_Data = xlsread('b1_left_LF01#001.abc.csv'); %Foot, Ankle, Knee, Hip, and Trunk
 Time = [1:1:length(Angular_Data)]';
 colors = {[0 0.4470 0.7410], [0.8500 0.3250 0.0980], [0.4660 0.6740 0.1880]};
 
@@ -101,7 +101,6 @@ title('Infant Joint Positions over Time');
 set(gca,'xtick',[]);
 set(gca,'ytick',[]);
 set(gca,'ztick',[]);
-
 
 % Plot animation
 for i = 1:1000
