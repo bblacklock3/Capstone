@@ -12,6 +12,7 @@ subplot(1, 2, 1);
 hip = raw(:, 3);
 knee = raw(:, 2);
 
+
 plot(time, hip, time, knee);
 hipTrack = animatedline('MaximumNumPoints', 1);
 hipTrack.Marker = 'o';
@@ -26,6 +27,8 @@ ylabel('Joint Angle (Degrees)');
 title('Infant Joint Angles vs Time');
 lgd = legend('Hip Data', 'Knee Data');
 xlim([min(time), max(time)]);
+axis square
+
 
 %% Plotting leg kicking
 subplot(1, 2, 2);
@@ -43,13 +46,23 @@ yhip = zeros(length(time), 1);
 xknee = cosd(180-hip);
 yknee = sind(180-hip);
 
-xfoot = cosd(knee - hip);
-yfoot = sind(knee - hip);
+q1 = 180 - hip;
+q2 = 180 - knee;
+psi = q1- q2;
+
+xfoot = xknee + cosd(psi);
+yfoot = yknee + sind(psi);
 
 title('Infant Joint Positions over Time');
 
 set(gca,'xtick',[]);
 set(gca,'ytick',[]);
+
+xlim([0, 2]);
+ylim([0, 2]);
+axis square
+% set(gcf, 'Position',  [200, 200, 800, 400]) % This changes the location
+% of the figure
 
 % Plot animation
 for i = 1:1000
@@ -69,6 +82,3 @@ for i = 1:1000
         
     end
 end
-
-xlim([-100, 30]);
-ylim([0, 300]);
