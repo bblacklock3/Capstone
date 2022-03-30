@@ -8,7 +8,7 @@ Ending = [140 140]; %[120 160]
 Minimum = [80 80]; %[60 100]
 Length = 1.1; %[0.6, 1.5]
 
-for i = 1:1
+for i = 1:100
 [Time, Hip, Knee] = Kick_Generator_Math(Starting, Ending, Minimum, Length);
 
 figure(1);
