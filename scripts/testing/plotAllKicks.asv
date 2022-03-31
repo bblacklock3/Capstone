@@ -4,7 +4,7 @@ function plotAllKicks
 st = dir;
 % st = dir('Angles');
 i=3;
-ca = {};
+ca = [];
 while i <= length(st)
     if ~contains(st(i).name, '.csv')
         i = i+1;
@@ -37,15 +37,13 @@ while i <= length(st)
     % prompt for the kick type
     prompt = "Type 'a' for async, 's' for sync, 'n' for not kick, a number for the # kick, 'q' for quit";
     value = input(prompt);
-    ca{i,1} = value;
-    if isnumeric(value)
-        i = value;
-    elseif value ~= 'q'
+    ca = [ca; {value}];
+    if value ~= 'q'
         i = i + 1;
     else
         break
     end
 end
 
-writecell(ca, 'kick_classifications_2.xlsx');
+writecell(ca, 'kick_classifications_1.xlsx');
 end
