@@ -58,8 +58,8 @@ title('Infant Joint Positions over Time');
 set(gca,'xtick',[]);
 set(gca,'ytick',[]);
 
-xlim([0, 2]);
-ylim([0, 2]);
+xlim([-1, 2]);
+ylim([-1, 2]);
 axis square
 % set(gcf, 'Position',  [200, 200, 800, 400]) % This changes the location
 % of the figure

@@ -47,5 +47,5 @@ while i <= length(st)
     end
 end
 
-writecell(ca, 'kick_classifications_2.xlsx');
+writecell(ca, 'kick_classifications_Chen.xlsx');
 end
