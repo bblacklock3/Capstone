@@ -48,5 +48,5 @@ G_1 = com_thigh
 G_2 = (com_shank*mass_shank+com_foot*mass_foot)/(mass_shank+mass_foot)
 m_1 = mass_thigh
 m_2 = (mass_shank+mass_foot)
-I_1 = tvInertia_thigh_1
-I_2 = tvInertia_shank_1
+I_1 = lgInertia_thigh
+I_2 = lgInertia_shank
