@@ -36,7 +36,6 @@ Angle_Start_Bounds = [100, 150];
 Angle_Min_Bounds = [55, 90];
 Angle_End_Bounds = [100, 150];
 
-
 while true
     
     % Plotting flat area
