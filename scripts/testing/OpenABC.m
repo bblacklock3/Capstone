@@ -102,7 +102,6 @@ set(gca,'xtick',[]);
 set(gca,'ytick',[]);
 set(gca,'ztick',[]);
 
-
 % Plot animation
 for i = 1:1000
     for k = 1:length(x1)
