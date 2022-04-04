@@ -13,14 +13,32 @@ x = linspace(0,1);
 X = x;
 Hip = 140;
 Knee = 130;
+End_Slope_Hip = 0;
+End_Slope_Knee = 0;
+X_Total = [];
+Hip_Total = [];
+Knee_Total = [];
+Hip_Diff_Total = [];
+Knee_Diff_Total = [];
+checker = false;
+T = table(X_Total, Hip_Total, Knee_Total, Hip_Diff_Total, Knee_Diff_Total);
+figure(1);
+subplot(1,2,1);
 h1 = animatedline;
 h2 = animatedline;
 h1.Color = '#0072BD';
 h2.Color = '#D95319';
-
-% Plot settings
-figure(1);
-ylim([50, 170]);
+subplot(1,2,2);
+leg = animatedline('MaximumNumPoints', 3);
+leg.LineWidth = 3;
+xlim([-0.5,1.75]);
+ylim([-0.75,1.75]);
+xticks([]);
+yticks([]);
+title('Infant Joint Positions over Time');
+subplot(1,2,1);
+ylim([50, 180]);
+set(gcf, 'Position', [500, 500, 1000, 400]);
 
 % Labeling plot
 ylabel('Joint Angle (Degrees)');
@@ -29,92 +47,173 @@ lgd = legend('Hip Data', 'Knee Data');
 xticks([]);
 
 % Parameter bounds
-X_Start = X(end);
-Length_Bounds = [0.6, 2];
-smooth_Bounds = [0.03, 0.1];
-Angle_Start_Bounds = [100, 150];
-Angle_Min_Bounds = [55, 90];
-Angle_End_Bounds = [100, 150];
+Length_Bounds = [0.9, 1.5];
+smooth_Bounds = [0.3, 0.3];
+Flat_Diff_Bounds = [10, 15, 10, 15];
+Angle_Start_Bounds = [150, 120, 130, 100];
+Angle_Diff_Bounds = [100, 70, 90, 60];
+Angle_End_Bounds = [140, 140, 120, 120];
+visual = true;
+Total_Time = 40;
 
-while true
+% Main loop
+while checker == false
     
-    % Plotting flat area
-    for i = 1:length(X)
-        addpoints(h1, X(i), Hip(end));
-        addpoints(h2, X(i), Knee(end));
-        drawnow;
-        xlim([X(i) - 3,X(i) + 1]);
-        pause(0.001);
-    end
     
-    % Initializing variables
-    X_Start = X(end);
-    Length = rand(1).* (Length_Bounds(2) - Length_Bounds(1)) + Length_Bounds(1);
-    smooth = rand(1).* (smooth_Bounds(2) - smooth_Bounds(1)) + smooth_Bounds(1);
+    [X, Hip, Knee, End_Slope_Hip, End_Slope_Knee, T] = Continuous_Demo_Plot(X, Hip, Knee, Length_Bounds, smooth_Bounds, Flat_Diff_Bounds, Angle_End_Bounds, P_Flat, true, End_Slope_Hip, End_Slope_Knee, h1, h2, leg, visual, T);
+    [X, Hip, Knee, End_Slope_Hip, End_Slope_Knee, T] = Continuous_Demo_Plot(X, Hip, Knee, Length_Bounds, smooth_Bounds, Flat_Diff_Bounds, Angle_End_Bounds, P_Flat, true, End_Slope_Hip, End_Slope_Knee, h1, h2, leg, visual, T);
+    [X, Hip, Knee, End_Slope_Hip, End_Slope_Knee, T] = Continuous_Demo_Plot(X, Hip, Knee, Length_Bounds, smooth_Bounds, Angle_Diff_Bounds, Angle_End_Bounds, P, false, End_Slope_Hip, End_Slope_Knee, h1, h2, leg, visual, T);
     
-    % Hip joint
-    Joint = 1;
-    Angle_Start = rand(1).* (Angle_Start_Bounds(2) - Angle_Start_Bounds(1)) + Angle_Start_Bounds(1);
-    Angle_Start = Hip(end);
-    Angle_Min = rand(1).* (Angle_Min_Bounds(2) - Angle_Min_Bounds(1)) + Angle_Min_Bounds(1);
-    Angle_End = rand(1).* (Angle_End_Bounds(2) - Angle_End_Bounds(1)) + Angle_End_Bounds(1);
-    [~, Hip] = Continuous_Demo_Math(P, Joint, X_Start, Length, Angle_Start, Angle_Min, Angle_End, smooth);
     
-    % Knee joint
-    Joint = 2;
-    Angle_Start = rand(1).* (Angle_Start_Bounds(2) - Angle_Start_Bounds(1)) + Angle_Start_Bounds(1);
-    Angle_Start = Knee(end);
-    Angle_Min = rand(1).* (Angle_Min_Bounds(2) - Angle_Min_Bounds(1)) + Angle_Min_Bounds(1);
-    Angle_End = rand(1).* (Angle_End_Bounds(2) - Angle_End_Bounds(1)) + Angle_End_Bounds(1);
-    [X, Knee] = Continuous_Demo_Math(P, Joint, X_Start, Length, Angle_Start, Angle_Min, Angle_End, smooth);
+%     % Initializing variables
+%     X_Start = X(end);
+%     isflat = true;
+%     Length = rand(1).* (Length_Bounds(2) - Length_Bounds(1)) + Length_Bounds(1);
+%     smooth = rand(1).* (smooth_Bounds(2) - smooth_Bounds(1)) + smooth_Bounds(1);
+%     
+%     % Hip joint
+%     Joint = 1;
+%     Angle_Start = Hip(end);
+%     Angle_Diff = rand(1).* (Flat_Diff_Bounds(2) - Flat_Diff_Bounds(1)) + Flat_Diff_Bounds(1);
+%     Angle_End = Angle_Start;
+%     [~, Hip, End_Slope_Hip] = Continuous_Demo_Math(P_Flat, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, End_Slope_Hip);
+%     
+%     % Knee joint
+%     Joint = 2;
+%     Angle_Start = Knee(end);
+%     Angle_Diff = rand(1).* (Flat_Diff_Bounds(2) - Flat_Diff_Bounds(1)) + Flat_Diff_Bounds(1);
+%     Angle_End = Angle_Start;
+%     [X, Knee, End_Slope_Knee] = Continuous_Demo_Math(P_Flat, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, End_Slope_Knee);
+%     
+%     % Plotting flat area
+%     for i = 1:length(X)
+%         addpoints(h1, X(i), Hip(i));
+%         addpoints(h2, X(i), Knee(i));
+%         drawnow;
+%         xlim([X(i) - 3,X(i) + 1]);
+%     end
+%     
+%     % Storing values for large plot
+%     X_Total = [X_Total, X];
+%     Hip_Total = [Hip_Total, Hip];
+%     Diff_Hip = diff(Hip) ./ diff(X);
+%     Knee_Total = [Knee_Total, Knee];
+%     Diff_Knee = diff(Knee) ./ diff(X);
+%     Hip_Diff_Total = [Hip_Diff_Total, [Diff_Hip, Diff_Hip(end)]];
+%     Knee_Diff_Total = [Knee_Diff_Total, [Diff_Knee, Diff_Knee(end)]];
+%     
+%     
+%     
+%     % Initializing variables
+%     X_Start = X(end);
+%     isflat = true;
+%     Length = rand(1).* (Length_Bounds(2) - Length_Bounds(1)) + Length_Bounds(1);
+%     smooth = rand(1).* (smooth_Bounds(2) - smooth_Bounds(1)) + smooth_Bounds(1);
+%     
+%     % Hip joint
+%     Joint = 1;
+%     Angle_Start = Hip(end);
+%     Angle_Diff = rand(1).* (Flat_Diff_Bounds(2) - Flat_Diff_Bounds(1)) + Flat_Diff_Bounds(1);
+%     Angle_End = Angle_Start;
+%     [~, Hip, End_Slope_Hip] = Continuous_Demo_Math(P_Flat, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, End_Slope_Hip);
+%     
+%     % Knee joint
+%     Joint = 2;
+%     Angle_Start = Knee(end);
+%     Angle_Diff = rand(1).* (Flat_Diff_Bounds(2) - Flat_Diff_Bounds(1)) + Flat_Diff_Bounds(1);
+%     Angle_End = Angle_Start;
+%     [X, Knee, End_Slope_Knee] = Continuous_Demo_Math(P_Flat, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, End_Slope_Knee);
+%     
+%     % Plotting flat area
+%     for i = 1:length(X)
+%         addpoints(h1, X(i), Hip(i));
+%         addpoints(h2, X(i), Knee(i));
+%         drawnow;
+%         xlim([X(i) - 3,X(i) + 1]);
+%     end
+%     
+%     % Storing values for large plot
+%     X_Total = [X_Total, X];
+%     Hip_Total = [Hip_Total, Hip];
+%     Diff_Hip = diff(Hip) ./ diff(X);
+%     Knee_Total = [Knee_Total, Knee];
+%     Diff_Knee = diff(Knee) ./ diff(X);
+%     Hip_Diff_Total = [Hip_Diff_Total, [Diff_Hip, Diff_Hip(end)]];
+%     Knee_Diff_Total = [Knee_Diff_Total, [Diff_Knee, Diff_Knee(end)]];
+%     
+%     
+%     
+%     % Initializing variables
+%     X_Start = X(end);
+%     isflat = false;
+%     Length = rand(1).* (Length_Bounds(2) - Length_Bounds(1)) + Length_Bounds(1);
+%     smooth = rand(1).* (smooth_Bounds(2) - smooth_Bounds(1)) + smooth_Bounds(1);
+%     
+%     % Hip joint
+%     Joint = 1;
+%     Angle_Start = Hip(end);
+%     Angle_Diff = rand(1).* (Angle_Diff_Bounds(2) - Angle_Diff_Bounds(1)) + Angle_Diff_Bounds(1);
+%     Angle_End = rand(1).* (Angle_End_Bounds(2) - Angle_End_Bounds(1)) + Angle_End_Bounds(1);
+%     [~, Hip, End_Slope_Hip] = Continuous_Demo_Math(P, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, End_Slope_Hip);
+%     
+%     % Knee joint
+%     Joint = 2;
+%     Angle_Start = Knee(end);
+%     Angle_Diff = rand(1).* (Angle_Diff_Bounds(2) - Angle_Diff_Bounds(1)) + Angle_Diff_Bounds(1);
+%     Angle_End = rand(1).* (Angle_End_Bounds(2) - Angle_End_Bounds(1)) + Angle_End_Bounds(1);
+%     [X, Knee, End_Slope_Knee] = Continuous_Demo_Math(P, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, End_Slope_Knee);
+%     
+%     % Plotting kicks
+%     for i = 1:length(X)
+%         addpoints(h1, X(i), Hip(i));
+%         addpoints(h2, X(i), Knee(i));
+%         drawnow;
+%         xlim([X(i) - 3,X(i) + 1]);
+%     end
+%     
+%     % Storing values for large plot
+%     X_Total = [X_Total, X];
+%     Hip_Total = [Hip_Total, Hip];
+%     Diff_Hip = diff(Hip) ./ diff(X);
+%     Knee_Total = [Knee_Total, Knee];
+%     Diff_Knee = diff(Knee) ./ diff(X);
+%     Hip_Diff_Total = [Hip_Diff_Total, [Diff_Hip, Diff_Hip(end)]];
+%     Knee_Diff_Total = [Knee_Diff_Total, [Diff_Knee, Diff_Knee(end)]];
     
-    % Plotting kicks
-    for i = 1:length(X)
-        addpoints(h1, X(i), Hip(i));
-        addpoints(h2, X(i), Knee(i));
-        drawnow;
-        xlim([X(i) - 3,X(i) + 1]);
-        pause(0.001);
-    end
-    
-    % Iterating time
-    X = X + Length;
+    checker = max(T.X_Total) > Total_Time;
+    %checker = max(X_Total) > 100;
     
 end
 
+% Debug plots
+figure(2);
+hold on;
+plot(T.X_Total, T.Hip_Total);
+plot(T.X_Total, T.Hip_Diff_Total);
+xlabel('Time (s)');
+ylabel('Hip Angle (Degrees)');
+title('Infant Hip Angles vs Time');
+lgd = legend('Angle Data', 'Velocity Data');
+figure(3);
+hold on;
+plot(T.X_Total, T.Knee_Total);
+plot(T.X_Total, T.Knee_Diff_Total);
+xlabel('Time (s)');
+ylabel('Knee Angle (Degrees)');
+title('Infant Knee Angles vs Time');
+lgd = legend('Angle Data', 'Velocity Data');
+figure(4);
+hold on;
+plot(T.X_Total, T.Hip_Total);
+plot(T.X_Total, T.Hip_Diff_Total);
+plot(T.X_Total, T.Knee_Total);
+plot(T.X_Total, T.Knee_Diff_Total);
+xlabel('Time (s)');
+ylabel('Knee Angle (Degrees)');
+title('Infant Joint Angles vs Time');
+lgd = legend('Hip Angle Data', 'Hip Velocity Data', 'Knee Angle Data', 'Knee Velocity Data');
 
 
-
-
-
-
-
-
-% for i = 1:length(P)
-%
-%     figure(1);
-%     hold on;
-%     x = linspace(0,1);
-%     P_Hip = P{i}(:,1);
-%     P_Knee = P{i}(:,2);
-%
-%     %Hip = P_Hip(1)*sin(P_Hip(2)*x+P_Hip(3)) + P_Hip(4)*sin(P_Hip(5)*x+P_Hip(6)) + P_Hip(7)*sin(P_Hip(8)*x+P_Hip(9)) + P_Hip(10)*sin(P_Hip(11)*x+P_Hip(12)) + P_Hip(13)*sin(P_Hip(14)*x+P_Hip(15)) + P_Hip(16)*sin(P_Hip(17)*x+P_Hip(18)) + P_Hip(19)*sin(P_Hip(20)*x+P_Hip(21)) + P_Hip(22)*sin(P_Hip(23)*x+P_Hip(24));
-%     %Knee = P_Knee(1)*sin(P_Knee(2)*x+P_Knee(3)) + P_Knee(4)*sin(P_Knee(5)*x+P_Knee(6)) + P_Knee(7)*sin(P_Knee(8)*x+P_Knee(9)) + P_Knee(10)*sin(P_Knee(11)*x+P_Knee(12)) + P_Knee(13)*sin(P_Knee(14)*x+P_Knee(15)) + P_Knee(16)*sin(P_Knee(17)*x+P_Knee(18)) + P_Knee(19)*sin(P_Knee(20)*x+P_Knee(21)) + P_Knee(22)*sin(P_Knee(23)*x+P_Knee(24));
-%
-%     Hip = P_Hip(1) + P_Hip(2)*cos(x*P_Hip(end)) + P_Hip(3)*sin(x*P_Hip(end)) + P_Hip(4)*cos(2*x*P_Hip(end)) + P_Hip(5)*sin(2*x*P_Hip(end)) + P_Hip(6)*cos(3*x*P_Hip(end)) + P_Hip(7)*sin(3*x*P_Hip(end)) + P_Hip(8)*cos(4*x*P_Hip(end)) + P_Hip(9)*sin(4*x*P_Hip(end)) + P_Hip(10)*cos(5*x*P_Hip(end)) + P_Hip(11)*sin(5*x*P_Hip(end)) + P_Hip(12)*cos(6*x*P_Hip(end)) + P_Hip(13)*sin(6*x*P_Hip(end)) + P_Hip(14)*cos(7*x*P_Hip(end)) + P_Hip(15)*sin(7*x*P_Hip(end)) + P_Hip(16)*cos(8*x*P_Hip(end)) + P_Hip(17)*sin(8*x*P_Hip(end));
-%     Knee = P_Knee(1) + P_Knee(2)*cos(x*P_Knee(end)) + P_Knee(3)*sin(x*P_Knee(end)) + P_Knee(4)*cos(2*x*P_Knee(end)) + P_Knee(5)*sin(2*x*P_Knee(end)) + P_Knee(6)*cos(3*x*P_Knee(end)) + P_Knee(7)*sin(3*x*P_Knee(end)) + P_Knee(8)*cos(4*x*P_Knee(end)) + P_Knee(9)*sin(4*x*P_Knee(end)) + P_Knee(10)*cos(5*x*P_Knee(end)) + P_Knee(11)*sin(5*x*P_Knee(end)) + P_Knee(12)*cos(6*x*P_Knee(end)) + P_Knee(13)*sin(6*x*P_Knee(end)) + P_Knee(14)*cos(7*x*P_Knee(end)) + P_Knee(15)*sin(7*x*P_Knee(end)) + P_Knee(16)*cos(8*x*P_Knee(end)) + P_Knee(17)*sin(8*x*P_Knee(end));
-%
-%     %     dT = x(2) - x(1);
-%     %     Fs = 1/dT;
-%     %     Hip = lowpass(Hip, 0.01, Fs);
-%     %     Knee = lowpass(Knee, 0.01, Fs);
-%
-%
-%
-%     plot(x, Hip, 'b', x, Knee, 'r');
-%     hold off;
-%
-% end
 
 
 
