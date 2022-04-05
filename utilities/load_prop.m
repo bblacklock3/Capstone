@@ -76,8 +76,24 @@ switch (name)
         prop.I__d_m_1 = 2e-5;
         prop.I__d_m_2 = 2e-5;
         prop.n_1 = 1;
-        prop.n_2 = 1;        
-
+        prop.n_2 = 1;
+    case 'prototype'
+        prop.L__i_g_1 = 0.044;
+        prop.L__i_g_2 = 0.038;s
+        prop.m__i_1 = 0.308;
+        prop.m__i_2 = 0.1607;
+        prop.I__i_1 = 2.301e-04;
+        prop.I__i_2 = 1.77e-04;
+        prop.L__d_g_1 = 0.044;
+        prop.L__d_g_2 = 0.025;
+        prop.m__d_1 = 0.036;
+        prop.m__d_2 = 0.0067;
+        prop.I__d_1 = 4.7e-5;
+        prop.I__d_2 = 3.0e-6;
+        prop.I__d_m_1 = 2e-5;
+        prop.I__d_m_2 = 2e-5;
+        prop.n_1 = 1;
+        prop.n_2 = 1;
 end
 end
 
