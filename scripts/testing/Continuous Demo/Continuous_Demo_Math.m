@@ -1,24 +1,4 @@
-
-
-% clear, clc, close all;
-% Joint = 1;
-% load('Kick_Fits.mat');
-%
-% % % Percentage of normalized kicks to be smoothing on each side
-% % P = ;- Fits coefficients
-% Joint = 1; % Hip(1) or Knee(2)
-% X_Start = 0;
-% % Length - Length of kick in seconds
-% % Angle_Start/Min/End - Angle parameters
-% Angle_Start = 120;
-% Angle_Min = 70;
-% Angle_End = 110;
-% smooth = 0.05; %Percentage normalized of smoothing on each side of data
-% Length = 0.7;
-
 function[x, Angle, End_Slope] = Continuous_Demo_Math(P, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, Init_Slope)
-
-
 
 % Setting normalized coords and gathering delta t
 x = linspace(0,1,(100.*Length));
@@ -105,7 +85,7 @@ else
     x = x + X_Start;
 end
 
-
+% Trimming data and prepping next function call
 Angle_Slope = diff(Angle) ./ diff(x);
 End_Slope = Angle_Slope(end);
 x(1) = [];
