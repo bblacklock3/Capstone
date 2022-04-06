@@ -8,12 +8,12 @@ Length_Bounds = [0.9, 1.5]; % Range of kick times
 smooth_Bounds = [0.3, 0.3]; % Ratio of smoothing to data
 % For following bounds first two are for hip, last two are for knee
 Flat_Diff_Bounds = [10, 15, 10, 15]; % How much flat area can deviate
-Angle_End_Bounds = [150, 120, 130, 100]; % Starting/ending angle for kicks
-Angle_Diff_Bounds = [100, 70, 90, 60]; % Minimum angle for kicks
-Vel_Bounds = 300; % Maximum allowable velocity
-Accel_Bounds = 1000; % Maximum allowable acceleration
-visual = false; % true for animation, false for no animation
-Total_Time = 30; % Total time of data collection
+Angle_End_Bounds = [150, 130, 140, 120]; % Starting/ending angle for kicks
+Angle_Diff_Bounds = [90, 70, 80, 60]; % Minimum angle for kicks
+Vel_Bounds = 400; % Maximum allowable velocity
+Accel_Bounds = 2000; % Maximum allowable acceleration
+visual = true; % true for animation, false for no animation
+Total_Time = 100; % Total time of data collection
 
 %% Setup
 % Loading fits
@@ -165,6 +165,36 @@ ylabel('Knee Angle (Degrees/s^2)');
 title('Infant Joint Angles vs Time');
 lgd = legend('Hip Acceleration Data', 'Knee Acceleration Data');
 
+[xhip, yhip, xknee, yknee, xfoot, yfoot] = Plot_Position(xq1, P_Hip, P_Knee);
 
+n=3;
+xq1(n:n:end) = [];
+P_Hip(n:n:end) = [];
+P_Knee(n:n:end) = [];
+xhip(n:n:end) = [];
+yhip(n:n:end) = [];
+xknee(n:n:end) = [];
+yknee(n:n:end) = [];
+xfoot(n:n:end) = [];
+yfoot(n:n:end) = [];
 
+% Plotting flat area
+if visual == true
+    for i = 1:length(xq1)
+        
+        % Angle plot
+        addpoints(h1, xq1(i), P_Hip(i));
+        addpoints(h2, xq1(i), P_Knee(i));
+        drawnow limitrate;
+        figure(1);
+        subplot(1,2,1);
+        xlim([xq1(i) - 3,xq1(i) + 1]);
+        
+        % Position plot
+        addpoints(leg, xhip(i), yhip(i));
+        addpoints(leg, xknee(i), yknee(i));
+        addpoints(leg, xfoot(i), yfoot(i));
+        
+    end
+end
 
