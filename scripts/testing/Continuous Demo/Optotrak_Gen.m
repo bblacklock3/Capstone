@@ -1,7 +1,11 @@
-%% Generates polynomials for optotrak kick data sets
+%% Generates fit values for optotrak kick data sets
+% Open Dr Chen's angle data open as the sole open folder
 
 % Resetting MATLAB
 clear, clc, close all;
+
+% Changeable variables
+filename = 'Fits.mat'; % Filename of output mat file
 
 % Initializing variables
 st = dir;
@@ -103,6 +107,6 @@ while i <= length(st)
 end
 
 % Creating mat file
-m = matfile('Fits.mat', 'Writable', true);
+m = matfile(filename, 'Writable', true);
 m.P = P;
 

@@ -22,24 +22,24 @@ Angle_End = rand(1).* (Angle_End_Bounds(4) - Angle_End_Bounds(3)) + Angle_End_Bo
 % Position plot
 [xhip, yhip, xknee, yknee, xfoot, yfoot] = Plot_Position(X, Hip, Knee);
 
-% Plotting flat area
-if visual == true
-    for i = 1:length(X)
-        
-        % Angle plot
-        addpoints(h1, X(i), Hip(i));
-        addpoints(h2, X(i), Knee(i));
-        drawnow;
-        subplot(1,2,1);
-        xlim([X(i) - 3,X(i) + 1]);
-        
-        % Position plot
-        addpoints(leg, xhip(i), yhip(i));
-        addpoints(leg, xknee(i), yknee(i));
-        addpoints(leg, xfoot(i), yfoot(i));
-        
-    end
-end
+% % Plotting flat area
+% if visual == true
+%     for i = 1:length(X)
+%         
+%         % Angle plot
+%         addpoints(h1, X(i), Hip(i));
+%         addpoints(h2, X(i), Knee(i));
+%         drawnow;
+%         subplot(1,2,1);
+%         xlim([X(i) - 3,X(i) + 1]);
+%         
+%         % Position plot
+%         addpoints(leg, xhip(i), yhip(i));
+%         addpoints(leg, xknee(i), yknee(i));
+%         addpoints(leg, xfoot(i), yfoot(i));
+%         
+%     end
+% end
 
 % Storing values for final plots
 Diff_Hip = diff(Hip) ./ diff(X);
