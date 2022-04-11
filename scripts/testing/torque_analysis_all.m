@@ -44,12 +44,28 @@ knee_deg(:,1:trim_len) = [];
 knee_deg(:,end-trim_len:end) = [];
 
 %% Plotting constants
+% black = [0 0 0];
+% blue = [57 106 177]./255;
+% red = [204 37 41]./255;
+% green = [62 150 81]./255;
+% brown = [146 36 40]./255;
+% purple = [107 76 154]./255;
+% blue = [0, 154, 222]./255
+% red = [255, 31, 91]./255
+% green = [0, 205, 108]./255
+% brown = [146 36 40]./255
+% purple = [175, 89, 186]./255
+% yellow = [255, 198, 30]./255
+
+C = linspecer(6);
+red = C(1,:);
+blue = C(2,:);
+green = C(3,:);
+orange = C(4,:);
+brown = C(5,:);
+yellow = C(6,:);
+
 black = [0 0 0];
-blue = [57 106 177]./255;
-red = [204 37 41]./255;
-green = [62 150 81]./255;
-brown = [146 36 40]./255;
-purple = [107 76 154]./255;
 font_size = 10;
 text_spacing = 0.2;
 kinematics_box = [4 1];

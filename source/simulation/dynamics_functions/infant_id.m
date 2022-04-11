@@ -25,6 +25,9 @@ if size(psi_ddot,1) ~= 2
 end
 
 tau_M = M*psi_ddot;
+tau_M(tau_M > prop.max_hip_torque) = prop.max_hip_torque;
+tau_M(tau_M < -prop.max_hip_torque) = -prop.max_hip_torque;
+
 tau_C = C*psi_dot.^2;
 tau_G = G;
 tau_total = tau_M + tau_C + tau_G;

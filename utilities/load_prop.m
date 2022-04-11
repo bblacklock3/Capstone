@@ -79,7 +79,7 @@ switch (name)
         prop.n_2 = 1;
     case 'prototype'
         prop.L__i_g_1 = 0.044;
-        prop.L__i_g_2 = 0.038;s
+        prop.L__i_g_2 = 0.038;
         prop.m__i_1 = 0.308;
         prop.m__i_2 = 0.1607;
         prop.I__i_1 = 2.301e-04;

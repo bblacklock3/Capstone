@@ -1,4 +1,7 @@
 function dy = full_system_ode(t,y,tau,prop)
+%% Full system for simulation
+% tau - [tau_d_1 tau_d_2 tau_i_1 tau_i_2]
+
 I__d_1 = prop.I__d_1;
 I__d_2 = prop.I__d_2;
 I__d_m_1 = prop.I__d_m_1;
