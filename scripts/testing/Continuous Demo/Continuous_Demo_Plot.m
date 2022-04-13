@@ -20,7 +20,7 @@ Angle_End = rand(1).* (Angle_End_Bounds(4) - Angle_End_Bounds(3)) + Angle_End_Bo
 [X, Knee, End_Slope_Knee] = Continuous_Demo_Math(P, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, End_Slope_Knee);
 
 % Position plot
-[xhip, yhip, xknee, yknee, xfoot, yfoot] = Plot_Position(X, Hip, Knee);
+% [xhip, yhip, xknee, yknee, xfoot, yfoot] = Plot_Position(X, Hip, Knee);
 
 % % Plotting flat area
 % if visual == true

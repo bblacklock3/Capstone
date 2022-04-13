@@ -5,15 +5,15 @@ clear, clc, close all;
 
 %% Changeable variables
 Length_Bounds = [0.9, 1.5]; % Range of kick times
-smooth_Bounds = [0.3, 0.3]; % Ratio of smoothing to data
+smooth_Bounds = [0.1, 0.1]; % Ratio of smoothing to data
 % For following bounds first two are for hip, last two are for knee
 Flat_Diff_Bounds = [10, 15, 10, 15]; % How much flat area can deviate
-Angle_End_Bounds = [150, 130, 140, 120]; % Starting/ending angle for kicks
-Angle_Diff_Bounds = [90, 70, 80, 60]; % Minimum angle for kicks
+Angle_End_Bounds = [150, 135, 140, 125]; % Starting/ending angle for kicks
+Angle_Diff_Bounds = [90, 75, 80, 65]; % Minimum angle for kicks
 Vel_Bounds = 400; % Maximum allowable velocity
 Accel_Bounds = 2000; % Maximum allowable acceleration
-visual = true; % true for animation, false for no animation
-Total_Time = 100; % Total time of data collection
+visual = false; % true for animation, false for no animation
+Total_Time = 30; % Total time of data collection
 
 %% Setup
 % Loading fits
@@ -164,6 +164,68 @@ xlabel('Time (s)');
 ylabel('Knee Angle (Degrees/s^2)');
 title('Infant Joint Angles vs Time');
 lgd = legend('Hip Acceleration Data', 'Knee Acceleration Data');
+
+% Final position plot
+figure(8);
+hold on;
+plot(xq1, P_Hip);
+plot(xq1, P_Knee);
+xlabel('Time (s)');
+ylabel('Knee Angle (Degrees)');
+title('Infant Joint Angles vs Time');
+lgd = legend('Hip Data', 'Knee Data');
+
+
+
+
+x_new = linspace(xq1(1),xq1(end),xq1(end).*50);
+Hip_New = pchip(xq1, P_Hip, x_new);
+Knee_New = pchip(xq1, P_Knee, x_new);
+
+x_new2 = linspace(x_new(1),x_new(end),x_new(end).*50);
+Hip_New = spline(x_new, Hip_New, x_new2);
+Knee_New = spline(x_new, Knee_New, x_new2);
+
+x_new = x_new2;
+
+Hip_Velocity_New = gradient(Hip_New) ./ gradient(x_new);
+Hip_Acceleration_New = gradient(Hip_Velocity_New) ./ gradient(x_new);
+Knee_Velocity_New = gradient(Knee_New) ./ gradient(x_new);
+Knee_Acceleration_New = gradient(Knee_Velocity_New) ./ gradient(x_new);
+
+
+
+% Final position plot 2
+figure(9);
+hold on;
+plot(x_new, Hip_New);
+plot(x_new, Knee_New);
+xlabel('Time (s)');
+ylabel('Knee Angle (Degrees)');
+title('Infant Joint Angles vs Time');
+lgd = legend('Hip Data new', 'Knee Data new');
+
+% Final velocity plot 2
+figure(10);
+hold on;
+plot(x_new, Hip_Velocity_New);
+plot(x_new, Knee_Velocity_New);
+xlabel('Time (s)');
+ylabel('Knee Angle (Degrees/s)');
+title('Infant Joint Angles Velocities vs Time');
+lgd = legend('Hip Velocity new', 'Knee Velocity new');
+
+% Final acceleration plot 2
+figure(11);
+hold on;
+plot(x_new, Hip_Acceleration_New);
+plot(x_new, Knee_Acceleration_New);
+xlabel('Time (s)');
+ylabel('Knee Angle (Degrees/s^2)');
+title('Infant Joint Angles Accelerations vs Time');
+lgd = legend('Hip Acceleration new', 'Knee Acceleration new');
+
+
 
 [xhip, yhip, xknee, yknee, xfoot, yfoot] = Plot_Position(xq1, P_Hip, P_Knee);
 
