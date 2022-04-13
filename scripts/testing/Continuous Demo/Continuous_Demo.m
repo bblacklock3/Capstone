@@ -13,7 +13,7 @@ Angle_Diff_Bounds = [90, 75, 80, 65]; % Minimum angle for kicks
 Vel_Bounds = 400; % Maximum allowable velocity
 Accel_Bounds = 2000; % Maximum allowable acceleration
 visual = false; % true for animation, false for no animation
-Total_Time = 30; % Total time of data collection
+Total_Time = 60; % Total time of data collection
 
 %% Setup
 % Loading fits
@@ -178,14 +178,18 @@ lgd = legend('Hip Data', 'Knee Data');
 
 
 
-x_new = linspace(xq1(1),xq1(end),xq1(end).*50);
+x_new = linspace(xq1(1),xq1(end),xq1(end).*20);
 Hip_New = pchip(xq1, P_Hip, x_new);
 Knee_New = pchip(xq1, P_Knee, x_new);
 
-x_new2 = linspace(x_new(1),x_new(end),x_new(end).*50);
+x_new2 = linspace(x_new(1),x_new(end),x_new(end).*100);
 Hip_New = spline(x_new, Hip_New, x_new2);
 Knee_New = spline(x_new, Knee_New, x_new2);
+x_new = x_new2;
 
+x_new2 = linspace(x_new(1),x_new(end),x_new(end).*200);
+Hip_New = pchip(x_new, Hip_New, x_new2);
+Knee_New = pchip(x_new, Knee_New, x_new2);
 x_new = x_new2;
 
 Hip_Velocity_New = gradient(Hip_New) ./ gradient(x_new);
@@ -193,7 +197,7 @@ Hip_Acceleration_New = gradient(Hip_Velocity_New) ./ gradient(x_new);
 Knee_Velocity_New = gradient(Knee_New) ./ gradient(x_new);
 Knee_Acceleration_New = gradient(Knee_Velocity_New) ./ gradient(x_new);
 
-
+% Get x_new, Hip_New, Knee_New as mat file
 
 % Final position plot 2
 figure(9);
