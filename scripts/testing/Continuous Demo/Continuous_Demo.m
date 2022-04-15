@@ -1,21 +1,29 @@
 %% Continuous demo
 
+% ----------------------------------
+% Pertinent values stored in table T
+% ----------------------------------
+
 % Resetting MATLAB
 clear, clc, close all;
 
 %% Changeable variables
+
 Length_Bounds = [0.9, 1.5]; % Range of kick times
 smooth_Bounds = [0.1, 0.1]; % Ratio of smoothing to data
+Flat_Bounds = [10, 14]; % Length of time between kicks
 % For following bounds first two are for hip, last two are for knee
-Flat_Diff_Bounds = [10, 15, 10, 15]; % How much flat area can deviate
-Angle_End_Bounds = [150, 135, 140, 125]; % Starting/ending angle for kicks
-Angle_Diff_Bounds = [90, 75, 80, 65]; % Minimum angle for kicks
+Flat_Diff_Bounds = [5, 10, 5, 10]; % How much flat area can deviate
+Angle_End_Bounds = [150, 135, 145, 130]; % Starting/ending angle for kicks
+Angle_Diff_Bounds = [85, 70, 80, 65]; % Minimum angle for kicks
 Vel_Bounds = 400; % Maximum allowable velocity
 Accel_Bounds = 2000; % Maximum allowable acceleration
 visual = false; % true for animation, false for no animation
-Total_Time = 60; % Total time of data collection
+PlayBackRate = 1; % whole numbers only, sets rate of animation
+Total_Time = 100; % Total time of data collection
 
 %% Setup
+
 % Loading fits
 load('Flat_Fits.mat');
 P_Flat = P;
@@ -37,7 +45,7 @@ checker = false;
 T = table(X_Total, Hip_Total, Knee_Total, Hip_Diff_Total, Knee_Diff_Total);
 
 % Setting up animated plot
-figure(1);
+f1 = figure(1);
 subplot(1,2,1);
 h1 = animatedline;
 h2 = animatedline;
@@ -59,12 +67,32 @@ title('Infant Joint Angles vs Time');
 lgd = legend('Hip Data', 'Knee Data');
 xticks([]);
 
+% Closing figure if animation if false
+if visual == false
+    close(f1);
+end
+
 %% Data collection
+
 while checker == false
     
-    % Data collection main functions
-    [X, Hip, Knee, End_Slope_Hip, End_Slope_Knee, T] = Continuous_Demo_Plot(X, Hip, Knee, Length_Bounds, smooth_Bounds, Flat_Diff_Bounds, Angle_End_Bounds, P_Flat, true, End_Slope_Hip, End_Slope_Knee, h1, h2, leg, visual, T);
-    [X, Hip, Knee, End_Slope_Hip, End_Slope_Knee, T] = Continuous_Demo_Plot(X, Hip, Knee, Length_Bounds, smooth_Bounds, Flat_Diff_Bounds, Angle_End_Bounds, P_Flat, true, End_Slope_Hip, End_Slope_Knee, h1, h2, leg, visual, T);
+    % Setup for flat range
+    Flat_Time = rand(1).* (Flat_Bounds(2) - Flat_Bounds(1)) + Flat_Bounds(1);
+    Rem_Time = Flat_Time;
+    
+    % Flat area
+    while Rem_Time > Length_Bounds(2)
+        Start_Time = X(end);
+        [X, Hip, Knee, End_Slope_Hip, End_Slope_Knee, T] = Continuous_Demo_Plot(X, Hip, Knee, Length_Bounds, smooth_Bounds, Flat_Diff_Bounds, Angle_End_Bounds, P_Flat, true, End_Slope_Hip, End_Slope_Knee, h1, h2, leg, visual, T);
+        Rem_Time = Rem_Time - (X(end) - Start_Time);
+    end
+    while Rem_Time > Length_Bounds(1)
+        Start_Time = X(end);
+        [X, Hip, Knee, End_Slope_Hip, End_Slope_Knee, T] = Continuous_Demo_Plot(X, Hip, Knee, Length_Bounds, smooth_Bounds, Flat_Diff_Bounds, Angle_End_Bounds, P_Flat, true, End_Slope_Hip, End_Slope_Knee, h1, h2, leg, visual, T);
+        Rem_Time = Rem_Time - (X(end) - Start_Time);
+    end    
+    
+    % Kick area
     [X, Hip, Knee, End_Slope_Hip, End_Slope_Knee, T] = Continuous_Demo_Plot(X, Hip, Knee, Length_Bounds, smooth_Bounds, Angle_Diff_Bounds, Angle_End_Bounds, P, false, End_Slope_Hip, End_Slope_Knee, h1, h2, leg, visual, T);
     
     % Continues until over max time
@@ -73,6 +101,19 @@ while checker == false
 end
 
 %% Data processing
+
+% % Debug plot
+% figure(3);
+% hold on;
+% plot(T.X_Total, T.Hip_Total);
+% % plot(T.X_Total, T.Hip_Diff_Total);
+% plot(T.X_Total, T.Knee_Total);
+% % plot(T.X_Total, T.Knee_Diff_Total);
+% xlabel('Time (s)');
+% ylabel('Knee Angle (Degrees)');
+% title('Infant Joint Angles vs Time');
+% lgd = legend('Hip Angle Data', 'Hip Velocity Data', 'Knee Angle Data', 'Knee Velocity Data');
+% ylim([min(Angle_Diff_Bounds) - 10, 180]);
 
 % Deleting duplicate time values
 [n, bin] = histc(T.X_Total, unique(T.X_Total));
@@ -93,17 +134,18 @@ for i = 1:length(T.X_Total)-1
     T.Knee_Total(i+1) = (alpha .* T.Knee_Total(i)) + ((1 - alpha) .* T.Knee_Total(i+1));
 end
 
-% Debug plot
-figure(4);
-hold on;
-plot(T.X_Total, T.Hip_Total);
-plot(T.X_Total, T.Hip_Diff_Total);
-plot(T.X_Total, T.Knee_Total);
-plot(T.X_Total, T.Knee_Diff_Total);
-xlabel('Time (s)');
-ylabel('Knee Angle (Degrees)');
-title('Infant Joint Angles vs Time');
-lgd = legend('Hip Angle Data', 'Hip Velocity Data', 'Knee Angle Data', 'Knee Velocity Data');
+% % Debug plot
+% figure(4);
+% hold on;
+% plot(T.X_Total, T.Hip_Total);
+% plot(T.X_Total, T.Hip_Diff_Total);
+% plot(T.X_Total, T.Knee_Total);
+% plot(T.X_Total, T.Knee_Diff_Total);
+% xlabel('Time (s)');
+% ylabel('Knee Angle (Degrees)');
+% title('Infant Joint Angles vs Time');
+% lgd = legend('Hip Angle Data', 'Hip Velocity Data', 'Knee Angle Data', 'Knee Velocity Data');
+% ylim([min(Angle_Diff_Bounds) - 10, 180]);
 
 % Zeroing time values
 T.X_Total = T.X_Total - T.X_Total(1);
@@ -111,23 +153,23 @@ T.X_Total = T.X_Total - T.X_Total(1);
 % Eliminating extreme velocities
 [Time, Hip, Knee] = Continuous_Demo_Trim(T.X_Total, T.Hip_Total, T.Knee_Total, Vel_Bounds, Accel_Bounds);
 
-% Finding velocities
-Hip_Vel = diff(Hip) ./ diff(Time);
-Hip_Vel = [Hip_Vel; Hip_Vel(end)];
-Knee_Vel = diff(Knee) ./ diff(Time);
-Knee_Vel = [Knee_Vel; Knee_Vel(end)];
-
-% Debug plot
-figure(5);
-hold on;
-plot(Time, Hip);
-plot(Time, Hip_Vel);
-plot(Time, Knee);
-plot(Time, Knee_Vel);
-xlabel('Time (s)');
-ylabel('Knee Angle (Degrees)');
-title('Infant Joint Angles vs Time');
-lgd = legend('Hip Angle Data', 'Hip Velocity Data', 'Knee Angle Data', 'Knee Velocity Data');
+% % Finding velocities
+% Hip_Vel = diff(Hip) ./ diff(Time);
+% Hip_Vel = [Hip_Vel; Hip_Vel(end)];
+% Knee_Vel = diff(Knee) ./ diff(Time);
+% Knee_Vel = [Knee_Vel; Knee_Vel(end)];
+% 
+% % Debug plot
+% figure(5);
+% hold on;
+% plot(Time, Hip);
+% plot(Time, Hip_Vel);
+% plot(Time, Knee);
+% plot(Time, Knee_Vel);
+% xlabel('Time (s)');
+% ylabel('Knee Angle (Degrees)');
+% title('Infant Joint Angles vs Time');
+% lgd = legend('Hip Angle Data', 'Hip Velocity Data', 'Knee Angle Data', 'Knee Velocity Data');
 
 % Fitting data
 xq1 = [0:0.01:Total_Time];
@@ -143,40 +185,37 @@ Accel_P_Knee = diff(Vel_P_Knee) ./ diff(xq1);
 Accel_P_Knee = [Accel_P_Knee, Accel_P_Knee(end)];
 T = table(xq1', P_Hip', P_Knee');
 
-% Plotting fitted data
-figure(6);
-hold on;
-plot(xq1, P_Hip);
-plot(xq1, Vel_P_Hip);
-plot(xq1, P_Knee);
-plot(xq1, Vel_P_Knee);
-xlabel('Time (s)');
-ylabel('Knee Angle (Degrees)');
-title('Infant Joint Angles vs Time');
-lgd = legend('Hip Angle Data', 'Hip Velocity Data', 'Knee Angle Data', 'Knee Velocity Data');
+% % Plotting fitted data
+% figure(6);
+% hold on;
+% plot(xq1, P_Hip);
+% plot(xq1, Vel_P_Hip);
+% plot(xq1, P_Knee);
+% plot(xq1, Vel_P_Knee);
+% xlabel('Time (s)');
+% ylabel('Knee Angle (Degrees)');
+% title('Infant Joint Angles vs Time');
+% lgd = legend('Hip Angle Data', 'Hip Velocity Data', 'Knee Angle Data', 'Knee Velocity Data');
 
-% Plotting acceleration fitted data
-figure(7);
-hold on;
-plot(xq1, Accel_P_Hip);
-plot(xq1, Accel_P_Knee);
-xlabel('Time (s)');
-ylabel('Knee Angle (Degrees/s^2)');
-title('Infant Joint Angles vs Time');
-lgd = legend('Hip Acceleration Data', 'Knee Acceleration Data');
+% % Plotting acceleration fitted data
+% figure(7);
+% hold on;
+% plot(xq1, Accel_P_Hip);
+% plot(xq1, Accel_P_Knee);
+% xlabel('Time (s)');
+% ylabel('Knee Angle (Degrees/s^2)');
+% title('Infant Joint Angles vs Time');
+% lgd = legend('Hip Acceleration Data', 'Knee Acceleration Data');
 
-% Final position plot
-figure(8);
-hold on;
-plot(xq1, P_Hip);
-plot(xq1, P_Knee);
-xlabel('Time (s)');
-ylabel('Knee Angle (Degrees)');
-title('Infant Joint Angles vs Time');
-lgd = legend('Hip Data', 'Knee Data');
-
-
-
+% % Final position plot
+% figure(8);
+% hold on;
+% plot(xq1, P_Hip);
+% plot(xq1, P_Knee);
+% xlabel('Time (s)');
+% ylabel('Knee Angle (Degrees)');
+% title('Infant Joint Angles vs Time');
+% lgd = legend('Hip Data', 'Knee Data');
 
 x_new = linspace(xq1(1),xq1(end),xq1(end).*20);
 Hip_New = pchip(xq1, P_Hip, x_new);
@@ -187,7 +226,7 @@ Hip_New = spline(x_new, Hip_New, x_new2);
 Knee_New = spline(x_new, Knee_New, x_new2);
 x_new = x_new2;
 
-x_new2 = linspace(x_new(1),x_new(end),x_new(end).*200);
+x_new2 = linspace(x_new(1),x_new(end),x_new(end).*200+1);
 Hip_New = pchip(x_new, Hip_New, x_new2);
 Knee_New = pchip(x_new, Knee_New, x_new2);
 x_new = x_new2;
@@ -198,6 +237,8 @@ Knee_Velocity_New = gradient(Knee_New) ./ gradient(x_new);
 Knee_Acceleration_New = gradient(Knee_Velocity_New) ./ gradient(x_new);
 
 % Get x_new, Hip_New, Knee_New as mat file
+T = table(x_new', Hip_New', Knee_New');
+T.Properties.VariableNames = {'Time', 'Hip Angles', 'Knee Angles'};
 
 % Final position plot 2
 figure(9);
@@ -207,7 +248,8 @@ plot(x_new, Knee_New);
 xlabel('Time (s)');
 ylabel('Knee Angle (Degrees)');
 title('Infant Joint Angles vs Time');
-lgd = legend('Hip Data new', 'Knee Data new');
+lgd = legend('Hip Data', 'Knee Data');
+ylim([min(Angle_Diff_Bounds) - 10, 180]);
 
 % Final velocity plot 2
 figure(10);
@@ -217,7 +259,7 @@ plot(x_new, Knee_Velocity_New);
 xlabel('Time (s)');
 ylabel('Knee Angle (Degrees/s)');
 title('Infant Joint Angles Velocities vs Time');
-lgd = legend('Hip Velocity new', 'Knee Velocity new');
+lgd = legend('Hip Velocity', 'Knee Velocity');
 
 % Final acceleration plot 2
 figure(11);
@@ -227,34 +269,36 @@ plot(x_new, Knee_Acceleration_New);
 xlabel('Time (s)');
 ylabel('Knee Angle (Degrees/s^2)');
 title('Infant Joint Angles Accelerations vs Time');
-lgd = legend('Hip Acceleration new', 'Knee Acceleration new');
+lgd = legend('Hip Acceleration', 'Knee Acceleration');
 
+% Obtaining values for animation of leg
+[xhip, yhip, xknee, yknee, xfoot, yfoot] = Plot_Position(x_new, Hip_New, Knee_New);
 
+% Setting up playback speed
+n=2;
+for i = 1:PlayBackRate
+    x_new(n:n:end) = [];
+    Hip_New(n:n:end) = [];
+    Knee_New(n:n:end) = [];
+    xhip(n:n:end) = [];
+    yhip(n:n:end) = [];
+    xknee(n:n:end) = [];
+    yknee(n:n:end) = [];
+    xfoot(n:n:end) = [];
+    yfoot(n:n:end) = [];
+end
 
-[xhip, yhip, xknee, yknee, xfoot, yfoot] = Plot_Position(xq1, P_Hip, P_Knee);
-
-n=3;
-xq1(n:n:end) = [];
-P_Hip(n:n:end) = [];
-P_Knee(n:n:end) = [];
-xhip(n:n:end) = [];
-yhip(n:n:end) = [];
-xknee(n:n:end) = [];
-yknee(n:n:end) = [];
-xfoot(n:n:end) = [];
-yfoot(n:n:end) = [];
-
-% Plotting flat area
+% Plotting area
 if visual == true
-    for i = 1:length(xq1)
+    for i = 1:length(x_new)
         
         % Angle plot
-        addpoints(h1, xq1(i), P_Hip(i));
-        addpoints(h2, xq1(i), P_Knee(i));
+        addpoints(h1, x_new(i), Hip_New(i));
+        addpoints(h2, x_new(i), Knee_New(i));
         drawnow limitrate;
         figure(1);
         subplot(1,2,1);
-        xlim([xq1(i) - 3,xq1(i) + 1]);
+        xlim([x_new(i) - 3,x_new(i) + 1]);
         
         % Position plot
         addpoints(leg, xhip(i), yhip(i));

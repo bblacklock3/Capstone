@@ -10,14 +10,16 @@ Joint = 1;
 Angle_Start = Hip(end);
 Angle_Diff = rand(1).* (Diff_Bounds(2) - Diff_Bounds(1)) + Diff_Bounds(1);
 Angle_End = rand(1).* (Angle_End_Bounds(2) - Angle_End_Bounds(1)) + Angle_End_Bounds(1);
-[~, Hip, End_Slope_Hip] = Continuous_Demo_Math(P, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, End_Slope_Hip);
+Angle_Des = (Angle_End_Bounds(2) + Angle_End_Bounds(1)) ./ 2;
+[~, Hip, End_Slope_Hip] = Continuous_Demo_Math(P, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, End_Slope_Hip, Angle_Des);
 
 % Knee joint
 Joint = 2;
 Angle_Start = Knee(end);
 Angle_Diff = rand(1).* (Diff_Bounds(4) - Diff_Bounds(3)) + Diff_Bounds(3);
 Angle_End = rand(1).* (Angle_End_Bounds(4) - Angle_End_Bounds(3)) + Angle_End_Bounds(3);
-[X, Knee, End_Slope_Knee] = Continuous_Demo_Math(P, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, End_Slope_Knee);
+Angle_Des = (Angle_End_Bounds(4) + Angle_End_Bounds(3)) ./ 2;
+[X, Knee, End_Slope_Knee] = Continuous_Demo_Math(P, Joint, X_Start, Length, Angle_Start, Angle_Diff, Angle_End, smooth, isflat, End_Slope_Knee, Angle_Des);
 
 % Position plot
 % [xhip, yhip, xknee, yknee, xfoot, yfoot] = Plot_Position(X, Hip, Knee);
